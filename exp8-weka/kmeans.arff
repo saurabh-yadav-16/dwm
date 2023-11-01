@@ -1,0 +1,16 @@
+@relation k_means_clustered
+
+@attribute Instance_number numeric
+@attribute data numeric
+@attribute Cluster {cluster0,cluster1}
+
+@data
+0,27,cluster0
+1,12,cluster0
+2,32,cluster1
+3,33,cluster1
+4,55,cluster1
+5,32,cluster1
+6,19,cluster0
+7,29,cluster0
+8,20,cluster0

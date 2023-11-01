@@ -1,0 +1,22 @@
+> data<-c(10,15,20,25,30,40,45,50,55,100)
+> boxplot(data)
+>summary(data)
+ Min. 1st Qu. Median Mean 3rd Qu. Max.
+ 10.00 21.25 35.00 39.00 48.75 100.00
+> hist(data)
+> plot(data)
+
+> x <- c(151, 174, 138, 186, 128, 136, 179, 163, 152, 131)
+> y <- c(63, 81, 56, 91, 47, 57, 76, 72, 62, 48)
+> relation <- lm(y~x)
+> print(relation) 
+
+>print(summary(relation)) 
+
+> a<-data.frame(x=170)
+> result<-predict(relation,a)
+> print(result) 
+
+>cor(x,y)
+
+>plot(y,x,abline(lm(x~y)),cex = 1.3,pch = 16) 
