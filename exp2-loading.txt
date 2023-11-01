@@ -1,0 +1,73 @@
+Implementation:
+
+mysql -u root -p --local-infile=1;    
+Enter password: 
+MariaDB [(none)]> use test;
+
+**exp2.1.txt**
+name, marks
+priyanka, 95
+sonal, 85
+saurabh, 100
+
+MariaDB [test]> create table student(name varchar(9), marks int(9));
+Query OK, 0 rows affected (0.052 sec)
+MariaDB [test]> load data local infile '/home/skylap/Desktop/DWM/exp2.1.txt'  into table student fields terminated by ',' enclosed by '"' lines terminated by '\n' ignore 1 rows;
+Query OK, 3 rows affected (0.041 sec)                
+Records: 3  Deleted: 0  Skipped: 0  Warnings: 0
+
+MariaDB [test]> select * from student;
++----------+-------+
+| name     | marks |
++----------+-------+
+| priyanka |    95 |
+| sonal    |    85 |
+| saurabh  |   100 |
++----------+-------+
+3 rows in set (0.041 sec)
+
+**exp2.2.txt**
+name, marks
+$priyanka, 95
+sonal, 85
+$saurabh, 100
+
+
+MariaDB [test]> create table student1(name varchar(9), marks int(9));
+Query OK, 0 rows affected (0.052 sec)
+MariaDB [test]> load data local infile '/home/skylap/Desktop/DWM/exp2.2.txt'  into table student1 fields terminated by ',' enclosed by '"' lines starting by '$' ignore 1 rows;
+Query OK, 2 rows affected (0.013 sec)                
+Records: 2  Deleted: 0  Skipped: 0  Warnings: 0
+MariaDB [test]> select * from student1;
++----------+-------+
+| name     | marks |
++----------+-------+
+| priyanka |    95 |
+| saurabh  |   100 |
++----------+-------+
+2 rows in set (0.001 sec)
+
+**exp2.3.txt**
+Priyanka, 95,85,80
+Tejas,90,85,80
+Saurabh,100,99,98
+
+
+MariaDB [test]> create table student2(name varchar(9), avg float(4,4));
+Query OK, 0 rows affected (0.053 sec)
+
+MariaDB [test]> create table student2(name varchar(9), avg float(5));
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [test]> load data local infile '/home/skylap/Desktop/DWM/exp2.3.txt'  into table student2 fields terminated by ',' (name, @m1, @m2, @m3) set avg=(@m1+@m2+@m3)/3;
+Query OK, 3 rows affected (0.014 sec)                
+Records: 3  Deleted: 0  Skipped: 0  Warnings: 0
+
+MariaDB [test]> select * from student2;
++----------+---------+
+| name     | avg     |
++----------+---------+
+| Priyanka | 86.6667 |
+| Tejas    |      85 |
+| Saurabh  |      99 |
++----------+---------+

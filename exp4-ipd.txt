@@ -1,0 +1,149 @@
+CREATE TABLE prod_dim (
+ prod_id INT PRIMARY KEY AUTO_INCREMENT,
+ prod_desc VARCHAR(255) NOT NULL,
+ selling_price DECIMAL(10, 2) NOT NULL,
+ cost DECIMAL(10, 2) NOT NULL
+);
+CREATE TABLE pay_dim (
+ pay_id INT PRIMARY KEY AUTO_INCREMENT,
+ amount DECIMAL(10, 2) NOT NULL,
+ mode VARCHAR(50) NOT NULL
+);
+CREATE TABLE time_dim (
+ time_key INT PRIMARY KEY AUTO_INCREMENT,
+ day DATE NOT NULL,
+ day_of_week INT NOT NULL,
+ month INT NOT NULL,
+ quarter INT NOT NULL,
+ year INT NOT NULL
+);
+CREATE TABLE retail_dim (
+ retail_id INT PRIMARY KEY AUTO_INCREMENT,
+ retail_add VARCHAR(255) NOT NULL,
+ products VARCHAR(255) NOT NULL,
+ retail_pay VARCHAR(50) NOT NULL
+);
+CREATE TABLE local_id_dim (
+ local_id INT PRIMARY KEY AUTO_INCREMENT,
+ cust_add VARCHAR(255) NOT NULL,
+ cust_order INT NOT NULL
+);
+CREATE TABLE cust_dim (
+ cust_id INT PRIMARY KEY AUTO_INCREMENT,
+ cust_name VARCHAR(255) NOT NULL,
+ local_id INT NOT NULL,
+ FOREIGN KEY (local_id) REFERENCES local_id_dim (local_id)
+);
+CREATE TABLE fact_table (
+ prod_id INT NOT NULL,
+ pay_id INT NOT NULL,
+ time_key INT NOT NULL,
+ retail_id INT NOT NULL,
+ cust_id INT NOT NULL,
+ quantity INT NOT NULL,
+ total_sales INT,
+ total_profit INT,
+ no_of_cust INT,
+ FOREIGN KEY (prod_id) REFERENCES prod_dim (prod_id),
+ FOREIGN KEY (pay_id) REFERENCES pay_dim (pay_id),
+ FOREIGN KEY (time_key) REFERENCES time_dim (time_key),
+ FOREIGN KEY (retail_id) REFERENCES retail_dim (retail_id),
+ FOREIGN KEY (cust_id) REFERENCES cust_dim (cust_id)
+);
+INSERT INTO pay_dim (amount, mode)
+VALUES
+ (100.00, "Credit Card"),
+ (80.00, "Cash");
+INSERT INTO pay_dim (amount, mode)
+VALUES
+ (100.00, "Credit Card"),
+ (80.00, "Cash");
+INSERT INTO time_dim (day, day_of_week, month, quarter, year)
+VALUES
+ ('2023-08-02', 3, 8, 3, 2023),
+ ('2023-08-01', 2, 8, 3, 2023);
+INSERT INTO retail_dim (retail_add, products, retail_pay)
+VALUES
+ ("Retail Store 1", "Product A, Product B", "Credit Card"),
+ ("Retail Store 2", "Product B", "Cash");
+INSERT INTO local_id_dim (cust_add, cust_order)
+VALUES
+ ("Address 1", 101),
+ ("Address 2", 102);
+INSERT INTO cust_dim (cust_name, local_id)
+VALUES
+ ("John Doe", 1),
+ ("Jane Smith", 2);
+INSERT INTO fact_table (prod_id, pay_id, time_key, retail_id, cust_id, quantity)
+VALUES
+ (1, 1, 1, 1, 1, 1),
+ (2, 2, 2, 2, 2, 2);
+Mysql [exp4]> show tables;
++----------------+
+| Tables_in_exp4 |
++----------------+
+| cust_dim |
+| fact_table |
+| local_id_dim |
+| pay_dim |
+| prod_dim |
+| retail_dim |
+| time_dim |
++----------------+
+7 rows in set (0.001 sec)
+Mysql [exp4]> select * from cust_dim;
++---------+------------+----------+
+| cust_id | cust_name | local_id |
++---------+------------+----------+
+| 1 | John Doe | 1 |
+| 2 | Jane Smith | 2 |
++---------+------------+----------+
+2 rows in set (0.000 sec)
+Mysql [exp4]> select * from fact_table;
++---------+--------+----------+-----------+---------+----------+-------------+--------------+------------+
+| prod_id | pay_id | time_key | retail_id | cust_id | quantity | total_sales | total_profit | no_of_cust |
++---------+--------+----------+-----------+---------+----------+-------------+--------------+------------+
+| 1 | 1 | 1 | 1 | 1 | 1 | NULL | NULL | NULL |
+| 2 | 2 | 2 | 2 | 2 | 2 | NULL | NULL | NULL |
++---------+--------+----------+-----------+---------+----------+-------------+--------------+------------+
+2 rows in set (0.000 sec)
+Mysql [exp4]> select * from local_id_dim;
++----------+-----------+------------+
+| local_id | cust_add | cust_order |
++----------+-----------+------------+
+| 1 | Address 1 | 101 |
+| 2 | Address 2 | 102 |
++----------+-----------+------------+
+2 rows in set (0.001 sec)
+Mysql [exp4]> select * from pay_dim;
++--------+--------+-------------+
+| pay_id | amount | mode |
++--------+--------+-------------+
+| 1 | 100.00 | Credit Card |
+| 2 | 80.00 | Cash |
++--------+--------+-------------+
+2 rows in set (0.001 sec)
+Mysql [exp4]> select * from prod_dim;
++---------+-----------+---------------+-------+
+| prod_id | prod_desc | selling_price | cost |
++---------+-----------+---------------+-------+
+| 1 | Product A | 50.00 | 30.00 |
+| 2 | Product B | 40.00 | 25.00 |
++---------+-----------+---------------+-------+
+2 rows in set (0.001 sec)
+Mysql [exp4]> select * from retail_dim;
++-----------+----------------+----------------------+-------------+
+| retail_id | retail_add | products | retail_pay |
++-----------+----------------+----------------------+-------------+
+| 1 | Retail Store 1 | Product A, Product B | Credit Card |
+| 2 | Retail Store 2 | Product B | Cash |
++-----------+----------------+----------------------+-------------+
+2 rows in set (0.001 sec)
+Mysql [exp4]> select * from time_dim;
++----------+------------+-------------+-------+---------+------+
+| time_key | day | day_of_week | month | quarter | year |
++----------+------------+-------------+-------+---------+------+
+| 1 | 2023-08-02 | 3 | 8 | 3 | 2023 |
+| 2 | 2023-08-01 | 2 | 8 | 3 | 2023 |
++----------+------------+-------------+-------+---------+------+
+2 rows in set (0.001 sec) 
